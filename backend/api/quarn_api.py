@@ -70,11 +70,3 @@ try:
     all_chapters_data = fetch_all_chapters()
 except requests.HTTPError as e:
     print("Failed to fetch chapter data:", e)
-else:
-    # Fetch and display the detailed info for the randomly selected chapter
-    chapter_info = fetch_chapter_info(chapter_id)
-    print(f"\nChapter {chapter_id} Information:\n{chapter_info}\n")
-
-    # Fetch and display the name of the randomly selected chapter
-    chapter_name = get_chapter_name(all_chapters_data, chapter_id)
-    print(f"Chapter {chapter_id} Name: {chapter_name}")
