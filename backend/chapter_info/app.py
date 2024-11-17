@@ -1,11 +1,15 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from backend.api.quarn_api import get_chapter_name, fetch_chapter_info, fetch_all_chapters
+from backend.api.quarn_api import get_chapter_name, fetch_chapter_info, get_random_chapter_id, get_english_translations
+
+from backend.ml import giveSentanceOnVibe, giveVibeAdvice
 
 """
 Use POST to send data, and GET to retrieve data.
 """
+
+
 
 app = FastAPI()
 class VibeRequest(BaseModel):
@@ -35,7 +39,8 @@ async def get_vibe(vibe: VibeRequest):
     
     # PROCESS ML MODEL model here call the function right here
     #  call the function and pass the proceses vibe here 
-    res = f"The current way the user is feeling is [{vibe}], get once sentance from the text that is unchanged"
+    res = giveVibeAdvice(vibe)
+   
     
     return {"vibe": res}
 
@@ -55,96 +60,115 @@ async def get_ayah(chapter_id: int, vibe:str):
     """
     if chapter_id < 1 or chapter_id > 113:
         chapter_id = 1
-    
+        
     if not vibe:
         vibe = "Netrual"
     
-    allChapterData = fetch_all_chapters()
-    text = fetch_chapter_info(chapter_id)
-    name = get_chapter_name(allChapterData, chapter_id)
+    
+    chapterID = get_random_chapter_id()
+    text = fetch_chapter_info(chapterID)
+    name = get_chapter_name(text)
+    translation = get_english_translations(text)
+    
+
     # Allows us to get the chapter name and the text
     # ALl we need to do is Curate the ml model
     
-    return {"name":name, "text":text, "vibe":vibe}
+    res = giveSentanceOnVibe(vibe, translation)
+    print(res)
+    
+    return {"name":name, "text":res}
     
     
-# @app.get("/ayah/random")
-# async def get_random_ayah():
-#     """
-#     Retrieves a random Ayah.
+@app.get("/ayah/random")
+async def get_random_ayah():
+    """
+    Retrieves a random Ayah.
 
-#     This endpoint selects and returns a random Ayah from the Quran database.
-#     Useful for providing users with a new Ayah each time or when they are exploring.
-#     """
-#     pass
+    This endpoint selects and returns a random Ayah from the Quran database.
+    Useful for providing users with a new Ayah each time or when they are exploring.
+    """
+    
+  
+    
+    # CALL ML MODEL RIGHT HERE 
+    # Replace the text
+    # return {"name": name, "text":text, "Number":chapter_id}
+    
+    pass
+    
+    
+   
 
-# @app.post("/ayah/analyze")
-# async def analyze_ayah():
-#     """
-#     Analyzes a specific Ayah to determine its most impactful message.
+@app.post("/ayah/analyze")
+async def analyze_ayah():
+    """
+    Analyzes a specific Ayah to determine its most impactful message.
 
-#     This function uses the user's vibe and an external AI model (e.g., OpenAI) to analyze 
-#     a given Ayah and extract its core meaning. This could provide a deeper, context-specific 
-#     interpretation to the user.
-#     """
-#     pass
+    This function uses the user's vibe and an external AI model (e.g., OpenAI) to analyze 
+    a given Ayah and extract its core meaning. This could provide a deeper, context-specific 
+    interpretation to the user.
+    """
+    pass
 
-# @app.get("/vibe/recommendation")
-# async def get_recommendation():
-#     """
-#     Provides recommendations based on the user's current vibe.
+@app.get("/vibe/recommendation")
+async def get_recommendation():
+    """
+    Provides recommendations based on the user's current vibe.
 
-#     Using the user's vibe, this function suggests specific Ayahs, prayers, or resources 
-#     that may help them in their current state.
-#     """
-#     pass
+    Using the user's vibe, this function suggests specific Ayahs, prayers, or resources 
+    that may help them in their current state.
+    """
+    pass
 
-# @app.get("/chapters")
-# async def get_all_chapters():
-#     """
-#     Retrieves information about all chapters.
+@app.get("/chapters")
+async def get_all_chapters():
+    """
+    Retrieves information about all chapters.
 
-#     This endpoint fetches details about each chapter in the Quran, which can be used 
-#     to help users explore different chapters or find specific content.
-#     """
-#     pass
+    This endpoint fetches details about each chapter in the Quran, which can be used 
+    to help users explore different chapters or find specific content.
+    """
+    pass
 
-# @app.get("/chapter/{chapter_id}")
-# async def get_chapter(chapter_id: int):
-#     """
-#     Retrieves information for a specific chapter by its ID.
+@app.get("/chapter/{chapter_id}")
+async def get_chapter(chapter_id: int):
+    """
+    Retrieves information for a specific chapter by its ID.
 
-#     This endpoint provides details about a particular chapter, such as its name, 
-#     number of verses, and themes. Useful for when a user wants to explore a specific chapter.
-#     """
-#     pass
+    This endpoint provides details about a particular chapter, such as its name, 
+    number of verses, and themes. Useful for when a user wants to explore a specific chapter.
+    """
+    pass
 
-# @app.get("/ayah/{ayah_id}")
-# async def get_ayah_by_id(ayah_id: int):
-#     """
-#     Retrieves a specific Ayah by its ID.
+@app.get("/ayah/{ayah_id}")
+async def get_ayah_by_id(ayah_id: int):
+    """
+    Retrieves a specific Ayah by its ID.
 
-#     This endpoint allows users to retrieve a particular Ayah directly by specifying its ID,
-#     enabling direct access to verses they want to revisit.
-#     """
-#     pass
+    This endpoint allows users to retrieve a particular Ayah directly by specifying its ID,
+    enabling direct access to verses they want to revisit.
+    """
+    pass
 
-# @app.post("/vibe/update")
-# async def update_user_vibe():
-#     """
-#     Updates the user's current vibe.
+@app.post("/vibe/update")
+async def update_user_vibe():
+    """
+    Updates the user's current vibe.
 
-#     This endpoint accepts data from the user to update their current vibe, allowing 
-#     the app to deliver more personalized recommendations and Ayahs in the future.
-#     """
-#     pass
+    This endpoint accepts data from the user to update their current vibe, allowing 
+    the app to deliver more personalized recommendations and Ayahs in the future.
+    """
+    pass
 
-# @app.get("/feedback")
-# async def get_user_feedback():
-#     """
-#     Collects user feedback on Ayah recommendations or vibe-based suggestions.
 
-#     This endpoint allows users to submit feedback on the Ayahs they receive, 
-#     which could be used to improve the recommendation engine or the vibe analysis.
-#     """
-#     pass
+# Take it via JSON
+@app.post("/feedback") 
+async def get_user_feedback():
+    """
+    Collects user feedback on Ayah recommendations or vibe-based suggestions.
+
+    This endpoint allows users to submit feedback on the Ayahs they receive, 
+    which could be used to improve the recommendation engine or the vibe analysis.
+    """
+    pass
