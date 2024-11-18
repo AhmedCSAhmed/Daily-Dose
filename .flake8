@@ -1,4 +1,4 @@
 [flake8]
-max-line-length = 100
-ignore = E501,W503
-exclude = venv, migrations
+ignore = W291, W292, W293, W391, E501
+select = F401, F841
+exclude = venv, migrations, myenv
