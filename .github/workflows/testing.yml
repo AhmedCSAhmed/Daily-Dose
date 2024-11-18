@@ -1,0 +1,39 @@
+# file to automate testing for dev & main branch
+# will not allow for invalid code 
+name: testing
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+  pull_request:
+    branches:
+      - dev
+      - main
+
+# this job checks for unused variables, imports and syntax errors. If not valid, then 
+jobs:
+  lint:
+    name: check code validity
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+
+      - name: Install flake8
+        run: pip install flake8
+
+        # configure flake 8 to be more lenient in .flake8
+      - name: python code checker
+        run: flake8 .
+  #test:
+  #  name: run tests
+  #  runs-on: ubuntu-latest
+# add future jobs, eg. job to test functions that are valid through /tests 
