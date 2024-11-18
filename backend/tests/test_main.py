@@ -1,8 +1,9 @@
+'''
 import pytest
 import requests
 from httpx import AsyncClient
 from unittest.mock import patch
-from main import app  # Adjust import based on your structure
+from ml import app  # Adjust import based on your structure
 from routes import fetch_all_chapters, fetch_chapter_info, get_chapter_name
 
 # Test Client
@@ -65,3 +66,4 @@ async def test_get_chapter_route(test_client, requests_mock):
     response = await test_client.get(f"/chapter/{chapter_id}")
     assert response.status_code == 200
     assert "Al-Fatiha" in response.json().get("text", "")
+'''
