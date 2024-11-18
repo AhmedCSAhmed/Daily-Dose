@@ -1,0 +1,7 @@
+requests
+google.generativeai
+pytest
+unittest.mock
+httpx
+fastapi
+pydantic
