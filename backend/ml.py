@@ -57,3 +57,76 @@ f"The user's current vibe is '{vibe}'. Generate a short, meaningful, and unique 
     return str(response.candidates[0].content.parts[0].text)
 
 
+
+
+def giveRandomAyah(text):
+    
+    """
+    Generates a single sentence from the provided Quranic text that aligns with the user's vibe.
+
+    Args:
+        text (str): The Quranic ayahs to reference.
+
+    Returns:
+        str: A single sentence from the Quranic ayahs that best matches the user's vibe, with an emoji added at the end.
+
+    Raises:
+        AttributeError: If the response object does not contain the expected structure or parts.
+    """
+    
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content(
+            f"Based on the provided Quranic ayahs: {text}, use the text I provided as reference to identify and return a single sentence that best aligns with the user's current vibe: 'which we don't know so take a guess'. Use the ayahs exactly as they are. DO NOT CHANGE THEM. Select the sentence that is most relevant. please addd an emohi at the end"
+
+    )
+    return str(response.candidates[0].content.parts[0].text)
+
+
+
+def generateResources(text):
+    
+    """
+    Generates a single sentence from the provided Quranic text that aligns with the user's vibe.
+
+    Args:
+        text (str): The Quranic ayahs to reference.
+
+    Returns:
+        str: A single sentence from the Quranic ayahs that best matches the user's vibe, with an emoji added at the end.
+
+    Raises:
+        AttributeError: If the response object does not contain the expected structure or parts.
+    """
+    
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content(
+        f" Based on the provided Quranic ayahs: {text}, suggest 1-2 reputable links directly related to the themes or context of these ayahs. (e.g., https://example.com/resource) with no additional explanation or commentary."
+        )
+    return str(response.candidates[0].content.parts[0].text)
+
+
+
+
+def analyze(text):
+    
+    """
+    Generates a single sentence from the provided Quranic text that aligns with the user's vibe.
+
+    Args:
+        text (str): The Quranic ayahs to reference.
+
+    Returns:
+        str: A single sentence from the Quranic ayahs that best matches the user's vibe, with an emoji added at the end.
+
+    Raises:
+        AttributeError: If the response object does not contain the expected structure or parts.
+    """
+    
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content(    
+                                      
+    f"Analyze the provided Quranic ayahs: {text}. Reflect briefly on their meaning and significance without altering the original text. Keep the analysis concise, limited to 1 to 1.5 paragraphs. Conclude with an appropriate emoji."
+    
+    )
+
+    return str(response.candidates[0].content.parts[0].text)
