@@ -1,8 +1,13 @@
 import requests
 import random
+from bs4 import BeautifulSoup
 
 # Base URL for Quran API
 BASE_URL = "https://quranapi.pages.dev/api"
+
+# Tafsir API
+TAFSIR_IBNKATHIR_URL = "https://api.quran.com/api/v4/tafsirs/169/by_ayah/{surah_number}:{ayah}"
+TAFSIR_MAARIF_URL = "https://api.quran.com/api/v4/tafsirs/168/by_ayah/{surah_number}:{ayah}"
 
 # Function to generate a random chapter ID between 1 and 114 (inclusive)
 def get_random_chapter_id():
@@ -91,6 +96,40 @@ def print_chapter_info(chapter_data):
     for i, ayah in enumerate(english_translations, start=1):
         print(f" - Ayah {i}: {ayah}")
 
+# fetch tafsir
+def fetch_tafsir(chapter: str, verse: str, version="ibn_kathir"): 
+    """
+    Fetches tafsir for a specific chapter and verse.
+    
+    Args: 
+        chapter (int): The chapter to fetch
+        verse (int): The verse to fetch
+        version (str): The version to fetch , default with ibnu kathir
+    Returns:
+        str: tafsir string parsed by beatiful soup from HTML into raw text
+    """
+    if version == "ibn_kathir":
+        url = TAFSIR_IBNKATHIR_URL.format(surah_number=chapter, ayah=verse)
+    elif version == "maarif":
+        url = TAFSIR_MAARIF_URL.format(surah_number=chapter, ayah=verse)
+    else:
+        print(f"Invalid version: {version}")
+        return None
+    
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an error for HTTP status codes 4xx/5xx
+        data = response.json()
+        # Extract the tafsir text from the API response, parse it into plain text, and strip leading/trailing whitespace
+        tafsir_html = data.get('tafsir', {}).get('text', '')
+        soup = BeautifulSoup(tafsir_html, 'html.parser')
+        plain_text = soup.get_text()
+        
+        return plain_text.strip()
+    except requests.HTTPError as e:
+        print(f"Failed to fetch tafsir for chapter {chapter}, verse {verse}: {e}")
+        return None
+
 # Main logic
 if __name__ == "__main__":
     # Fetch a random chapter ID
@@ -99,6 +138,8 @@ if __name__ == "__main__":
     
     # Fetch the chapter info from the API
     chapter_data = fetch_chapter_info(random_chapter_id)
-    
+    # print random tafsir alongside chapter information
+    tafsir = fetch_tafsir(random_chapter_id, 1)
     # Print the chapter info
     print_chapter_info(chapter_data)
+    print(tafsir)

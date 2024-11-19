@@ -5,3 +5,4 @@ unittest.mock
 httpx
 fastapi
 pydantic
+bs4
