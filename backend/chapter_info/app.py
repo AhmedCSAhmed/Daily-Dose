@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 from backend.api.quarn_api import get_chapter_name, fetch_chapter_info, get_random_chapter_id, get_english_translations
 
-from backend.ml import giveSentanceOnVibe, giveVibeAdvice
+from backend.ml import giveSentanceOnVibe, giveVibeAdvice, giveRandomAyah, generateResources, analyze
 
 """
 Use POST to send data, and GET to retrieve data.
@@ -85,23 +85,28 @@ async def get_random_ayah():
     """
     Retrieves a random Ayah.
 
-    This endpoint selects and returns a random Ayah from the Quran database.
-    Useful for providing users with a new Ayah each time or when they are exploring.
+    This endpoint selects a random chapter (Surah) from the Quran database,
+    fetches its text, processes it using a machine learning model to extract 
+    a single relevant Ayah, and returns the Ayah along with the chapter name.
+
+    Returns:
+        dict: A dictionary containing:
+            - name (str): The name of the chapter (Surah).
+            - ayah (str): The processed Ayah relevant to the user's vibe.
     """
     
+    chapterID = get_random_chapter_id()
+    text = fetch_chapter_info(chapterID)
+    res = giveRandomAyah(text)
+    name = get_chapter_name(text)
   
-    
-    # CALL ML MODEL RIGHT HERE 
-    # Replace the text
-    # return {"name": name, "text":text, "Number":chapter_id}
-    
-    pass
+    return {"name": name, "ayah":res}
     
     
    
 
-@app.post("/ayah/analyze")
-async def analyze_ayah():
+@app.post("/analyze")
+async def analyze_ayah(chapterID: int):
     """
     Analyzes a specific Ayah to determine its most impactful message.
 
@@ -109,7 +114,16 @@ async def analyze_ayah():
     a given Ayah and extract its core meaning. This could provide a deeper, context-specific 
     interpretation to the user.
     """
-    pass
+    
+    if chapterID < 1 or chapterID > 113:
+        chapterID = 1
+    
+    text = fetch_chapter_info(chapterID)
+    name = get_chapter_name(text)
+    res = analyze(text)
+    resources = generateResources(text)
+    
+    return {"name":name, "analysis":res, "links": resources}
 
 @app.get("/vibe/recommendation")
 async def get_recommendation():
