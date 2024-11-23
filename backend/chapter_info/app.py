@@ -121,31 +121,12 @@ async def analyze_ayah(chapterID: int):
     text = fetch_chapter_info(chapterID)
     name = get_chapter_name(text)
     res = analyze(text)
-    resources = generateResources(text)
-    
-    return {"name":name, "analysis":res, "links": resources}
+    ai_links = generateResources(text)
+    links = ai_links.strip("\n")
+    return {"name":name, "analysis":res, "links": links}
 
-@app.get("/vibe/recommendation")
-async def get_recommendation():
-    """
-    Provides recommendations based on the user's current vibe.
 
-    Using the user's vibe, this function suggests specific Ayahs, prayers, or resources 
-    that may help them in their current state.
-    """
-    pass
-
-@app.get("/chapters")
-async def get_all_chapters():
-    """
-    Retrieves information about all chapters.
-
-    This endpoint fetches details about each chapter in the Quran, which can be used 
-    to help users explore different chapters or find specific content.
-    """
-    pass
-
-@app.get("/chapter/{chapter_id}")
+@app.post("/chapter")
 async def get_chapter(chapter_id: int):
     """
     Retrieves information for a specific chapter by its ID.
@@ -153,36 +134,13 @@ async def get_chapter(chapter_id: int):
     This endpoint provides details about a particular chapter, such as its name, 
     number of verses, and themes. Useful for when a user wants to explore a specific chapter.
     """
-    pass
-
-@app.get("/ayah/{ayah_id}")
-async def get_ayah_by_id(ayah_id: int):
-    """
-    Retrieves a specific Ayah by its ID.
-
-    This endpoint allows users to retrieve a particular Ayah directly by specifying its ID,
-    enabling direct access to verses they want to revisit.
-    """
-    pass
-
-@app.post("/vibe/update")
-async def update_user_vibe():
-    """
-    Updates the user's current vibe.
-
-    This endpoint accepts data from the user to update their current vibe, allowing 
-    the app to deliver more personalized recommendations and Ayahs in the future.
-    """
-    pass
+    text = fetch_chapter_info(chapter_id)
+    name = get_chapter_name(text)
+    result = giveRandomAyah(text)
+    
+    return {"name": name, "text":result}
+    
+    
 
 
-# Take it via JSON
-@app.post("/feedback") 
-async def get_user_feedback():
-    """
-    Collects user feedback on Ayah recommendations or vibe-based suggestions.
 
-    This endpoint allows users to submit feedback on the Ayahs they receive, 
-    which could be used to improve the recommendation engine or the vibe analysis.
-    """
-    pass

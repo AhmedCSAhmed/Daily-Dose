@@ -100,7 +100,7 @@ def generateResources(text):
     
     model = genai.GenerativeModel("gemini-1.5-flash")
     response = model.generate_content(
-        f" Based on the provided Quranic ayahs: {text}, suggest 1-2 reputable links directly related to the themes or context of these ayahs. (e.g., https://example.com/resource) with no additional explanation or commentary."
+       f"Based on the provided Quranic ayahs: {text}, suggest 1 reputable link directly related to the themes or context of these ayahs (e.g., https://example.com/resource) with no additional explanation or commentary and no \\n character at all"
         )
     return str(response.candidates[0].content.parts[0].text)
 
