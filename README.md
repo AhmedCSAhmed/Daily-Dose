@@ -1,7 +1,7 @@
-# Ayah Project  
+# Daily-Dose 
 
 ## Overview  
-The **Ayah Project** is a backend-only system designed to dynamically fetch, analyze, and contextualize Quranic verses (ayahs) using advanced AI integration. Leveraging Google Gemini AI, the system provides contextual analysis, personalized recommendations, and curated content links tailored to the themes of Quranic text and the user’s current vibe. Built with FastAPI and Pydantic, the project is optimized for scalability, modularity, and high performance while maintaining a secure and efficient infrastructure.  
+The **Daily-Dose ** is a backend-only system designed to dynamically fetch, analyze, and contextualize Quranic verses (ayahs) using advanced AI integration. Leveraging Google Gemini AI, the system provides contextual analysis, personalized recommendations, and curated content links tailored to the themes of Quranic text and the user’s current vibe. Built with FastAPI and Pydantic, the project is optimized for scalability, modularity, and high performance while maintaining a secure and efficient infrastructure.  
 
 ## Use Cases  
 The Ayah Project dynamically tailors Quranic verses, educational resources, and curated content links based on a wide range of emotional or spiritual vibes, making it a versatile tool for users in various states of mind:  
