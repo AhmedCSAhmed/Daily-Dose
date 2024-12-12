@@ -24,7 +24,7 @@ class ChapterRequest(BaseModel):
     
 # Sending via JSON
 @app.post("/vibe") 
-async def get_vibe(vibe: VibeRequest):
+async def get_vibe(vibe: str):
     """
     Retrieves the user's current vibe and returns relevant information.
     
